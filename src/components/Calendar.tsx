@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Calendar.css'
 
 interface TimeSlot {
@@ -16,6 +16,19 @@ const Calendar = ({
   selectedSlots = []
 }: CalendarProps) => {
   const [currentWeek, setCurrentWeek] = useState(new Date())
+  const [isSmallScreen, setIsSmallScreen] = useState(false)
+
+  // Check screen size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth < 1200)
+    }
+
+    checkScreenSize()
+    window.addEventListener('resize', checkScreenSize)
+    
+    return () => window.removeEventListener('resize', checkScreenSize)
+  }, [])
 
   // Generate time slots from 6AM to 12AM (midnight) in 3-hour intervals
   const timeSlots: TimeSlot[] = [
@@ -36,12 +49,13 @@ const Calendar = ({
     return new Date(d.setDate(diff))
   }
 
-  // Generate 7 days for the current week
+  // Generate days for the current week (7 for desktop, 3 for mobile)
   const getWeekDays = () => {
     const weekStart = getWeekStart(currentWeek)
     const days = []
+    const numDays = isSmallScreen ? 3 : 7
     
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < numDays; i++) {
       const date = new Date(weekStart)
       date.setDate(weekStart.getDate() + i)
       days.push(date)
@@ -59,11 +73,12 @@ const Calendar = ({
 
   const navigateWeek = (direction: 'prev' | 'next') => {
     const newDate = new Date(currentWeek)
-    newDate.setDate(currentWeek.getDate() + (direction === 'next' ? 7 : -7))
+    const daysToMove = isSmallScreen ? 3 : 7
+    newDate.setDate(currentWeek.getDate() + (direction === 'next' ? daysToMove : -daysToMove))
     setCurrentWeek(newDate)
   }
 
-  const isDateUnavailable = (date: Date) => {
+  const isDateUnavailable = (_date: Date) => {
     // All dates are available unless they are past dates
     return false
   }
@@ -87,8 +102,32 @@ const Calendar = ({
     }
   }
 
-  const formatDateHeader = (date: Date) => {
-    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`
+  const formatDateHeader = (dates: Date[]) => {
+    if (dates.length === 0) return ''
+    
+    const firstDate = dates[0]
+    const lastDate = dates[dates.length - 1]
+    
+    const firstMonth = monthNames[firstDate.getMonth()]
+    const lastMonth = monthNames[lastDate.getMonth()]
+    const firstYear = firstDate.getFullYear()
+    const lastYear = lastDate.getFullYear()
+    
+    if (isSmallScreen) {
+      // For 3-day view, show the range more compactly
+      if (firstMonth === lastMonth && firstYear === lastYear) {
+        return `${firstMonth} ${firstDate.getDate()}-${lastDate.getDate()}, ${firstYear}`
+      } else {
+        return `${firstMonth} ${firstDate.getDate()} - ${lastMonth} ${lastDate.getDate()}, ${firstYear}`
+      }
+    } else {
+      // For 7-day view, show full range
+      if (firstYear === lastYear) {
+        return `${firstMonth} - ${lastMonth} ${firstYear}`
+      } else {
+        return `${firstMonth} ${firstYear} - ${lastMonth} ${lastYear}`
+      }
+    }
   }
 
   return (
@@ -97,17 +136,17 @@ const Calendar = ({
         <button 
           className="nav-button"
           onClick={() => navigateWeek('prev')}
-          aria-label="Previous week"
+          aria-label={isSmallScreen ? "Previous 3 days" : "Previous week"}
         >
           ←
         </button>
         <h3 className="calendar-title">
-          {formatDateHeader(weekDays[0])} - {formatDateHeader(weekDays[6])}
+          {formatDateHeader(weekDays)}
         </h3>
         <button 
           className="nav-button"
           onClick={() => navigateWeek('next')}
-          aria-label="Next week"
+          aria-label={isSmallScreen ? "Next 3 days" : "Next week"}
         >
           →
         </button>

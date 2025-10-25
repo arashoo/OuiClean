@@ -4,11 +4,26 @@
   box-sizing: border-box;
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 35px rgba(29, 78, 216, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+  }
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f9f9f9;
+  color: #1e3a8a;
+  background-color: #f8fafc;
 }
 
 .App {
@@ -16,5 +31,56 @@ body {
 }
 
 main {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+/* Floating confirm button styles */
+.floating-confirm-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(29, 78, 216, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: pulse 2s infinite;
+}
+
+.floating-confirm-btn:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(29, 78, 216, 0.6);
+}
+
+/* Mobile responsiveness for floating button */
+@media (max-width: 768px) {
+  .floating-confirm-btn {
+    bottom: 15px;
+    right: 15px;
+    left: 15px;
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-confirm-btn {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
 }

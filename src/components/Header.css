@@ -39,7 +39,7 @@
 .brand-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #5269ad;
+  color: #1d4ed8;
   text-decoration: none;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .nav-link:hover {
-  color: #4c6faf;
+  color: #2563eb;
 }
 
 .nav-link::after {
@@ -85,7 +85,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: #4c66af;
+  background: #1d4ed8;
   transition: width 0.3s ease;
 }
 
@@ -117,8 +117,8 @@
 }
 
 .login-btn:hover {
-  background: rgba(76, 102, 175, 0.1);
-  color: #4c87af;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
 }
 
 .avatar-icon {
@@ -144,8 +144,8 @@
 }
 
 .cart-btn:hover {
-  background: rgba(76, 175, 80, 0.1);
-  color: #4CAF50;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
 }
 
 .cart-icon {
